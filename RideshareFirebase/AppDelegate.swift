@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RevealingSplashView
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         
         window?.rootViewController = HomeViewController()
+        
+        let revealingSplashView = RevealingSplashView(iconImage: #imageLiteral(resourceName: "uberlogo"), iconInitialSize: CGSize(width: 160, height: 160), backgroundColor: .white)
+        window?.addSubview(revealingSplashView)
+        revealingSplashView.animationType = SplashAnimationType.squeezeAndZoomOut
+        revealingSplashView.startAnimation()
+        
         return true
     }
 

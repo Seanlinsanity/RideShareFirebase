@@ -52,21 +52,21 @@ class LoginController: UIViewController{
         return view
     }()
     
-    let registerLoginButton : UIButton = {
+    let registerButton : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("建立新帳戶", for: UIControlState())
+        button.setTitle("建立新帳號", for: UIControlState())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.addTarget(self, action: #selector(handleRegisterLogin), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
         return button
     }()
     
     let haveAccountButton : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("已經有帳戶?", for: UIControlState())
+        button.setTitle("已經有帳號?", for: UIControlState())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17.5)
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -85,25 +85,11 @@ class LoginController: UIViewController{
         return button
     }()
     
-    @objc private func handleRegisterLogin(){
-        if registerLoginButton.titleLabel?.text == "登入"  {
-            print("Try to Login")
-        }else{
-            print("Try to Register")
-        }
+    @objc private func handleRegister(){
+        print(123)
     }
     
     @objc private func handleHaveAccount(){
-        
-        inputContainer.subviews.forEach { (view) in
-            view.removeFromSuperview()
-        }
-        
-        if registerLoginButton.titleLabel?.text == "登入"  {
-            setupRegisterUI()
-        }else{
-            setupLoginUI()
-        }
         
     }
     
@@ -163,38 +149,29 @@ class LoginController: UIViewController{
         logoImageView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -64).isActive = true
         logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor, multiplier: 0.5).isActive = true
         
-        view.addSubview(inputContainer)
-        inputContainer.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 16).isActive = true
-        inputContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputContainer.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        inputContainer.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        inputContainerViewHeightConstraint = inputContainer.heightAnchor.constraint(equalToConstant: 165)
-        inputContainerViewHeightConstraint?.isActive = true
+        setupContainerView()
         
-        addSeperatorView(view: nameTextField)
-        addSeperatorView(view: emailTextField)
-        addSeperatorView(view: passwordTextField)
-        
-        setupRegisterUI()
-        
-        view.addSubview(registerLoginButton)
-        registerLoginButton.centerXAnchor.constraint(equalTo: inputContainer.centerXAnchor).isActive = true
-        registerLoginButton.topAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: 32).isActive = true
-        registerLoginButton.widthAnchor.constraint(equalTo: inputContainer.widthAnchor).isActive = true
-        registerLoginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        view.addSubview(registerButton)
+        registerButton.centerXAnchor.constraint(equalTo: inputContainer.centerXAnchor).isActive = true
+        registerButton.topAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: 32).isActive = true
+        registerButton.widthAnchor.constraint(equalTo: inputContainer.widthAnchor).isActive = true
+        registerButton.heightAnchor.constraint(equalTo: inputContainer.heightAnchor, multiplier: 1/3).isActive = true
         
         view.addSubview(haveAccountButton)
         haveAccountButton.centerXAnchor.constraint(equalTo: inputContainer.centerXAnchor).isActive = true
         haveAccountButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -48).isActive = true
         haveAccountButton.widthAnchor.constraint(equalTo: inputContainer.widthAnchor).isActive = true
-        haveAccountButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        haveAccountButton.heightAnchor.constraint(equalTo: emailTextField.heightAnchor, multiplier: 4/5).isActive = true
     }
     
-    var inputContainerViewHeightConstraint: NSLayoutConstraint?
-    
-    func setupRegisterUI(){
+    func setupContainerView(){
         
-        inputContainerViewHeightConstraint?.constant = 165
+        view.addSubview(inputContainer)
+        inputContainer.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 16).isActive = true
+        inputContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputContainer.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        inputContainer.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        inputContainer.heightAnchor.constraint(equalToConstant: 165).isActive = true
         
         inputContainer.addSubview(nameTextField)
         nameTextField.topAnchor.constraint(equalTo: inputContainer.topAnchor).isActive = true
@@ -214,28 +191,9 @@ class LoginController: UIViewController{
         passwordTextField.widthAnchor.constraint(equalTo: emailTextField.widthAnchor).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo:emailTextField.heightAnchor).isActive = true
         
-        registerLoginButton.setTitle("建立新帳戶", for: .normal)
-        haveAccountButton.setTitle("已經有帳戶？", for: .normal)
-    }
-    
-    func setupLoginUI(){
-        
-        inputContainerViewHeightConstraint?.constant = 110
-        
-        inputContainer.addSubview(emailTextField)
-        emailTextField.topAnchor.constraint(equalTo: inputContainer.topAnchor).isActive = true
-        emailTextField.centerXAnchor.constraint(equalTo: inputContainer.centerXAnchor).isActive = true
-        emailTextField.widthAnchor.constraint(equalTo: inputContainer.widthAnchor, constant: -24).isActive = true
-        emailTextField.heightAnchor.constraint(equalTo: inputContainer.heightAnchor, multiplier: 1/2).isActive = true
-        
-        inputContainer.addSubview(passwordTextField)
-        passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
-        passwordTextField.centerXAnchor.constraint(equalTo: emailTextField.centerXAnchor).isActive = true
-        passwordTextField.widthAnchor.constraint(equalTo: emailTextField.widthAnchor).isActive = true
-        passwordTextField.heightAnchor.constraint(equalTo:emailTextField.heightAnchor).isActive = true
-        
-        registerLoginButton.setTitle("登入", for: .normal)
-        haveAccountButton.setTitle("建立帳戶", for: .normal)
+        addSeperatorView(view: nameTextField)
+        addSeperatorView(view: emailTextField)
+        addSeperatorView(view: passwordTextField)
     }
     
 }

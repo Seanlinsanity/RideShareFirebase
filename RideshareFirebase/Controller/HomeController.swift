@@ -11,13 +11,6 @@ import MapKit
 
 class HomeViewController: UIViewController, MenuDelegate {
     
-    func handleLogin() {
-        menuLauncher.handleDismiss()
-        let loginController = LoginController()
-        present(loginController, animated: true, completion: nil)
-    }
-    
-    
     let mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,6 +58,11 @@ class HomeViewController: UIViewController, MenuDelegate {
         return menuLauncher
     }()
     
+    func handleLogin() {
+        menuLauncher.handleDismiss()
+        let loginController = LoginController()
+        present(loginController, animated: true, completion: nil)
+    }
     
     fileprivate func setupUI() {
         view.addSubview(mapView)
@@ -94,9 +92,8 @@ class HomeViewController: UIViewController, MenuDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .white
         
+        view.backgroundColor = .white
         setupUI()
     }
     
