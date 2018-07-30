@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "noProfilePhoto.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "icons8-customer-96.png",
       "scale" : "2x"
     },
     {
