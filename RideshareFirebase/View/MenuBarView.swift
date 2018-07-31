@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import Firebase
 
 protocol MenuDelegate {
-    func handleLogin()
+    func presentLoginController()
 }
 
 class MenuBarView: UIView {
     
     var delegate: MenuDelegate?
+    
     let userInfoView: UserInfoView = {
         let view = UserInfoView()
         view.backgroundColor = .black
@@ -22,49 +24,27 @@ class MenuBarView: UIView {
         return view
     }()
     
-    let yourTripsButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        btn.setTitle("Your Trips", for: .normal)
-        return btn
+    lazy var buttonStackView: MenuButtonStackView = {
+        let stackView = MenuButtonStackView()
+        stackView.menuBarView = self
+        return stackView
     }()
     
-    let paymentButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        btn.setTitleColor(.black, for: .normal)
-        btn.setTitle("Payment", for: .normal)
-        return btn
-    }()
+    private func setupObserver(){
+        let loginNotificationName = Notification.Name(rawValue: ObservationKey.login.rawValue)
+        let signOutNotificationName = Notification.Name(rawValue: ObservationKey.signOut.rawValue)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLoginSignOutUpdateUI), name: loginNotificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLoginSignOutUpdateUI), name: signOutNotificationName, object: nil)
+    }
     
-    let helpButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        btn.setTitleColor(.black, for: .normal)
-        btn.setTitle("Help", for: .normal)
-        return btn
-    }()
-    
-    let settingsButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        btn.setTitleColor(.black, for: .normal)
-        btn.setTitle("Settings", for: .normal)
-        return btn
-    }()
-    
-    let loginButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        btn.setTitleColor(.black, for: .normal)
-        btn.setTitle("Log in", for: .normal)
-        btn.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
-        return btn
-    }()
-    
-    @objc private func handleLogin(){
-        delegate?.handleLogin()
+    @objc private func handleLoginSignOutUpdateUI(){
+        userInfoView.chekUserId()
+        buttonStackView.checkUserId()
+    }
+
+    func handlePresentLoginController(){
+        delegate?.presentLoginController()
     }
     
     override init(frame: CGRect) {
@@ -74,6 +54,8 @@ class MenuBarView: UIView {
         
         setupUserInfoView()
         setupStackView()
+        
+        setupObserver()
     }
     
     private func setupUserInfoView(){
@@ -85,20 +67,23 @@ class MenuBarView: UIView {
     }
     
     private func setupStackView(){
-        let stackView = UIStackView(arrangedSubviews: [yourTripsButton, paymentButton, helpButton, settingsButton, loginButton])
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.axis = .vertical
+        buttonStackView.distribution = .fillEqually
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(stackView)
-        stackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        stackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        stackView.topAnchor.constraint(equalTo: userInfoView.bottomAnchor).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        addSubview(buttonStackView)
+        buttonStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        buttonStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        buttonStackView.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 16).isActive = true
+        buttonStackView.heightAnchor.constraint(equalToConstant: 300).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

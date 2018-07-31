@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import Firebase
 
 class HomeViewController: UIViewController, MenuDelegate {
     
@@ -58,12 +59,12 @@ class HomeViewController: UIViewController, MenuDelegate {
         return menuLauncher
     }()
     
-    func handleLogin() {
+    func presentLoginController() {
         menuLauncher.handleDismiss()
         let loginController = LoginController()
         present(loginController, animated: true, completion: nil)
     }
-    
+        
     fileprivate func setupUI() {
         view.addSubview(mapView)
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true

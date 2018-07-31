@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class UserInfoView: UIView {
     
@@ -22,13 +23,26 @@ class UserInfoView: UIView {
     
     let nameLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "Visitor"
         lb.textColor = .white
         lb.font = UIFont.boldSystemFont(ofSize: 20)
         lb.textAlignment = .center
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
+    
+    let pickupSwitch: UISwitch = {
+        let pickupSwitch = UISwitch()
+        pickupSwitch.translatesAutoresizingMaskIntoConstraints = false
+        pickupSwitch.isHidden = true
+        pickupSwitch.addTarget(self, action: #selector(handlePickupSwitch), for: .valueChanged)
+        return pickupSwitch
+    }()
+    
+    @objc private func handlePickupSwitch(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let isEnabled = pickupSwitch.isOn
+        Database.database().reference().child("users").child(uid).child("isPickupEnabled").setValue(isEnabled)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,9 +57,38 @@ class UserInfoView: UIView {
         
         addSubview(nameLabel)
         nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: userImageView.bottomAnchor, constant: 16).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: userImageView.bottomAnchor, constant: 8).isActive = true
         nameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        addSubview(pickupSwitch)
+        pickupSwitch.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
+        pickupSwitch.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        pickupSwitch.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        pickupSwitch.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        chekUserId()
+    }
+    
+    func chekUserId() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            nameLabel.text = "Visitor"
+            pickupSwitch.isHidden = true
+            return
+        }
+        
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let userData = snapshot.value as? [String : Any] else { return }
+            let name = userData["name"] as? String
+            self.nameLabel.text = name
+            if let isPickupEnable = userData["isPickupEnabled"] as? Bool {
+                self.pickupSwitch.isHidden = false
+                self.pickupSwitch.isOn = isPickupEnable
+            }
+            
+        }) { (error) in
+            print(error)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

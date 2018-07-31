@@ -17,6 +17,11 @@
 		14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8BB210AC77C00C123EC /* MenuLauncher.swift */; };
 		14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C1210AE90B00C123EC /* UserInfoView.swift */; };
 		14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C3210B305500C123EC /* MenuBarView.swift */; };
+		14EF35E6210ED4F20032DC0A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 14EF35E5210ED4F20032DC0A /* GoogleService-Info.plist */; };
+		14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */; };
+		14EF35EC210EE0350032DC0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35EB210EE0350032DC0A /* User.swift */; };
+		14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */; };
+		14F2F1D021103180000E3C40 /* MenuButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +36,11 @@
 		14EED8BB210AC77C00C123EC /* MenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuLauncher.swift; sourceTree = "<group>"; };
 		14EED8C1210AE90B00C123EC /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		14EED8C3210B305500C123EC /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		14EF35E5210ED4F20032DC0A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDatabase.swift; sourceTree = "<group>"; };
+		14EF35EB210EE0350032DC0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController_handleAuth.swift; sourceTree = "<group>"; };
+		14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtonStackView.swift; sourceTree = "<group>"; };
 		362EE09B4329C595EFBF9D2D /* Pods-RideshareFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RideshareFirebase.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RideshareFirebase/Pods-RideshareFirebase.debug.xcconfig"; sourceTree = "<group>"; };
 		76875E501B06B50CF85A839D /* Pods_RideshareFirebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RideshareFirebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B54F29671E815BEC271D5845 /* Pods-RideshareFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RideshareFirebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-RideshareFirebase/Pods-RideshareFirebase.release.xcconfig"; sourceTree = "<group>"; };
@@ -69,9 +79,12 @@
 		148697102109967B0093FACA /* RideshareFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				14EF35EA210EE0240032DC0A /* Model */,
+				14EF35E7210ED60C0032DC0A /* FirebaseManager */,
 				14CE28BC210C41DC00EB3ED5 /* View */,
 				14CE28BB210C41D300EB3ED5 /* Controller */,
 				148697112109967C0093FACA /* AppDelegate.swift */,
+				14EF35E5210ED4F20032DC0A /* GoogleService-Info.plist */,
 				148697152109967C0093FACA /* Main.storyboard */,
 				14869718210996800093FACA /* Assets.xcassets */,
 				1486971A210996800093FACA /* LaunchScreen.storyboard */,
@@ -85,6 +98,7 @@
 			children = (
 				148697132109967C0093FACA /* HomeController.swift */,
 				14CE28BD210C479D00EB3ED5 /* LoginController.swift */,
+				14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -95,8 +109,25 @@
 				14EED8BB210AC77C00C123EC /* MenuLauncher.swift */,
 				14EED8C3210B305500C123EC /* MenuBarView.swift */,
 				14EED8C1210AE90B00C123EC /* UserInfoView.swift */,
+				14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		14EF35E7210ED60C0032DC0A /* FirebaseManager */ = {
+			isa = PBXGroup;
+			children = (
+				14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */,
+			);
+			path = FirebaseManager;
+			sourceTree = "<group>";
+		};
+		14EF35EA210EE0240032DC0A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				14EF35EB210EE0350032DC0A /* User.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		2F03C172A4DCD994D965B792 /* Frameworks */ = {
@@ -177,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1486971C210996800093FACA /* LaunchScreen.storyboard in Resources */,
+				14EF35E6210ED4F20032DC0A /* GoogleService-Info.plist in Resources */,
 				14869719210996800093FACA /* Assets.xcassets in Resources */,
 				148697172109967C0093FACA /* Main.storyboard in Resources */,
 			);
@@ -236,12 +268,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14F2F1D021103180000E3C40 /* MenuButtonStackView.swift in Sources */,
 				148697142109967C0093FACA /* HomeController.swift in Sources */,
 				14CE28BE210C479D00EB3ED5 /* LoginController.swift in Sources */,
 				14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */,
 				14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */,
+				14EF35EC210EE0350032DC0A /* User.swift in Sources */,
 				148697122109967C0093FACA /* AppDelegate.swift in Sources */,
+				14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */,
 				14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */,
+				14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

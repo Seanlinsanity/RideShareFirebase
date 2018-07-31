@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Firebase
+
 
 class LoginController: UIViewController{
+    
     
     let logoImageView: UIImageView = {
         let iv = UIImageView()
@@ -85,16 +88,27 @@ class LoginController: UIViewController{
         return button
     }()
     
+    let segmentControl: UISegmentedControl = {
+        let types = [ "Passenger" , "Driver" ]
+        let sc = UISegmentedControl(items: types)
+        let font: [AnyHashable : Any] = [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 18)]
+        sc.setTitleTextAttributes(font, for: .normal)
+        sc.selectedSegmentIndex = 0
+        sc.tintColor = .black
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        return sc
+    }()
+    
     @objc private func handleRegisterLogin(){
+        
         if registerLoginButton.titleLabel?.text == "登入"  {
-            print("Try to Login")
+            handleLogin()
         }else{
-            print("Try to Register")
+            handleRegister()
         }
     }
     
     @objc private func handleHaveAccount(){
-        
         inputContainer.subviews.forEach { (view) in
             view.removeFromSuperview()
         }
@@ -104,7 +118,6 @@ class LoginController: UIViewController{
         }else{
             setupLoginUI()
         }
-        
     }
     
     @objc private func handleDismiss(){
@@ -159,7 +172,7 @@ class LoginController: UIViewController{
         
         view.addSubview(logoImageView)
         logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 88).isActive = true
+        logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 64).isActive = true
         logoImageView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -64).isActive = true
         logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor, multiplier: 0.5).isActive = true
         
@@ -175,12 +188,12 @@ class LoginController: UIViewController{
         addSeperatorView(view: emailTextField)
         addSeperatorView(view: passwordTextField)
         
-        setupRegisterUI()
+        setupLoginUI()
         
         view.addSubview(registerLoginButton)
         registerLoginButton.centerXAnchor.constraint(equalTo: inputContainer.centerXAnchor).isActive = true
-        registerLoginButton.topAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: 32).isActive = true
-        registerLoginButton.widthAnchor.constraint(equalTo: inputContainer.widthAnchor).isActive = true
+        registerLoginButton.topAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: 96).isActive = true
+        registerLoginButton.widthAnchor.constraint(equalTo: inputContainer.widthAnchor, constant: -24).isActive = true
         registerLoginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
         
         view.addSubview(haveAccountButton)
@@ -193,6 +206,12 @@ class LoginController: UIViewController{
     var inputContainerViewHeightConstraint: NSLayoutConstraint?
     
     func setupRegisterUI(){
+        
+        view.addSubview(segmentControl)
+        segmentControl.topAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: 16).isActive = true
+        segmentControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        segmentControl.widthAnchor.constraint(equalTo: inputContainer.widthAnchor, constant: -24).isActive = true
         
         inputContainerViewHeightConstraint?.constant = 165
         
@@ -219,6 +238,8 @@ class LoginController: UIViewController{
     }
     
     func setupLoginUI(){
+        
+        segmentControl.removeFromSuperview()
         
         inputContainerViewHeightConstraint?.constant = 110
         

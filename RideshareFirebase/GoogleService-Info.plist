@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>710683003704-vc5qkirhb80tv067q40m7grpcv3is7im.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.710683003704-vc5qkirhb80tv067q40m7grpcv3is7im</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDzhwF0VQe14DnmOz0VODYNwF9Ia19zQM0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>710683003704</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>seanlin.RideshareFirebase</string>
+	<key>PROJECT_ID</key>
+	<string>rideshare-87258</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rideshare-87258.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:710683003704:ios:675b3f7650dfdfe9</string>
+	<key>DATABASE_URL</key>
+	<string>https://rideshare-87258.firebaseio.com</string>
+</dict>
+</plist>
