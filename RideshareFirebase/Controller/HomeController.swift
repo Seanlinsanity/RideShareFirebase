@@ -8,9 +8,13 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 import Firebase
 
-class HomeViewController: UIViewController, MenuDelegate {
+class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
+    
+    let locationManager = CLLocationManager()
+    var regionRadius: CLLocationDistance = 1000
     
     let mapView: MKMapView = {
         let mapView = MKMapView()
@@ -59,12 +63,32 @@ class HomeViewController: UIViewController, MenuDelegate {
         return menuLauncher
     }()
     
-    func presentLoginController() {
-        menuLauncher.handleDismiss()
-        let loginController = LoginController()
-        present(loginController, animated: true, completion: nil)
+    private func checkLocationAuthStatus(){
+        if CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
+            locationManager.startUpdatingLocation()
+        }else{
+            locationManager.requestAlwaysAuthorization()
+        }
     }
+    
+    func centerMapOnUserLocation() {
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, regionRadius, regionRadius)
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
+        view.backgroundColor = .white
+        setupUI()
+        
+        mapView.delegate = self
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        checkLocationAuthStatus()
+    }
+    
     fileprivate func setupUI() {
         view.addSubview(mapView)
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -91,19 +115,18 @@ class HomeViewController: UIViewController, MenuDelegate {
         requestRideButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .white
-        setupUI()
-    }
-    
     @objc private func handleShowMenu(){
         menuLauncher.showMenuBar()
     }
     
     @objc private func handleRequestRide(){
-        print(456)
+        centerMapOnUserLocation()
+    }
+    
+    func presentLoginController() {
+        menuLauncher.handleDismiss()
+        let loginController = LoginController()
+        present(loginController, animated: true, completion: nil)
     }
 
 }

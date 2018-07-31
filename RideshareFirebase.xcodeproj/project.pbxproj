@@ -22,6 +22,7 @@
 		14EF35EC210EE0350032DC0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35EB210EE0350032DC0A /* User.swift */; };
 		14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */; };
 		14F2F1D021103180000E3C40 /* MenuButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */; };
+		14F2F1D421105759000E3C40 /* HomeController_CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F2F1D321105759000E3C40 /* HomeController_CLLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		14EF35EB210EE0350032DC0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController_handleAuth.swift; sourceTree = "<group>"; };
 		14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtonStackView.swift; sourceTree = "<group>"; };
+		14F2F1D321105759000E3C40 /* HomeController_CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController_CLLocation.swift; sourceTree = "<group>"; };
 		362EE09B4329C595EFBF9D2D /* Pods-RideshareFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RideshareFirebase.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RideshareFirebase/Pods-RideshareFirebase.debug.xcconfig"; sourceTree = "<group>"; };
 		76875E501B06B50CF85A839D /* Pods_RideshareFirebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RideshareFirebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B54F29671E815BEC271D5845 /* Pods-RideshareFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RideshareFirebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-RideshareFirebase/Pods-RideshareFirebase.release.xcconfig"; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				148697132109967C0093FACA /* HomeController.swift */,
+				14F2F1D321105759000E3C40 /* HomeController_CLLocation.swift */,
 				14CE28BD210C479D00EB3ED5 /* LoginController.swift */,
 				14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */,
 			);
@@ -106,10 +109,7 @@
 		14CE28BC210C41DC00EB3ED5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				14EED8BB210AC77C00C123EC /* MenuLauncher.swift */,
-				14EED8C3210B305500C123EC /* MenuBarView.swift */,
-				14EED8C1210AE90B00C123EC /* UserInfoView.swift */,
-				14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */,
+				14F2F1D2211047D8000E3C40 /* MenuBar */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -128,6 +128,18 @@
 				14EF35EB210EE0350032DC0A /* User.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		14F2F1D2211047D8000E3C40 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				14EED8BB210AC77C00C123EC /* MenuLauncher.swift */,
+				14EED8C3210B305500C123EC /* MenuBarView.swift */,
+				14EED8C1210AE90B00C123EC /* UserInfoView.swift */,
+				14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */,
+			);
+			name = MenuBar;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		2F03C172A4DCD994D965B792 /* Frameworks */ = {
@@ -276,6 +288,7 @@
 				14EF35EC210EE0350032DC0A /* User.swift in Sources */,
 				148697122109967C0093FACA /* AppDelegate.swift in Sources */,
 				14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */,
+				14F2F1D421105759000E3C40 /* HomeController_CLLocation.swift in Sources */,
 				14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */,
 				14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */,
 			);
