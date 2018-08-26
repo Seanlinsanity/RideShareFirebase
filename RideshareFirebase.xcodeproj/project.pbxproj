@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		02788E433AC62C7BC853FC5B /* Pods_RideshareFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76875E501B06B50CF85A839D /* Pods_RideshareFirebase.framework */; };
+		1466DB482111A4CE00EDB812 /* DatabseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB472111A4CE00EDB812 /* DatabseService.swift */; };
+		1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */; };
 		148697122109967C0093FACA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148697112109967C0093FACA /* AppDelegate.swift */; };
 		148697142109967C0093FACA /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148697132109967C0093FACA /* HomeController.swift */; };
 		148697172109967C0093FACA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 148697152109967C0093FACA /* Main.storyboard */; };
@@ -26,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1466DB472111A4CE00EDB812 /* DatabseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabseService.swift; sourceTree = "<group>"; };
+		1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
 		1486970E2109967B0093FACA /* RideshareFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RideshareFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		148697112109967C0093FACA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		148697132109967C0093FACA /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -60,6 +64,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1466DB462111A4AE00EDB812 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				1466DB472111A4CE00EDB812 /* DatabseService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		148697052109967B0093FACA = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +93,7 @@
 		148697102109967B0093FACA /* RideshareFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				1466DB462111A4AE00EDB812 /* Service */,
 				14EF35EA210EE0240032DC0A /* Model */,
 				14EF35E7210ED60C0032DC0A /* FirebaseManager */,
 				14CE28BC210C41DC00EB3ED5 /* View */,
@@ -126,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				14EF35EB210EE0350032DC0A /* User.swift */,
+				1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -284,8 +298,10 @@
 				148697142109967C0093FACA /* HomeController.swift in Sources */,
 				14CE28BE210C479D00EB3ED5 /* LoginController.swift in Sources */,
 				14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */,
+				1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */,
 				14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */,
 				14EF35EC210EE0350032DC0A /* User.swift in Sources */,
+				1466DB482111A4CE00EDB812 /* DatabseService.swift in Sources */,
 				148697122109967C0093FACA /* AppDelegate.swift in Sources */,
 				14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */,
 				14F2F1D421105759000E3C40 /* HomeController_CLLocation.swift in Sources */,

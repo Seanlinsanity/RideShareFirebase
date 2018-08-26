@@ -12,6 +12,7 @@ import Firebase
 
 class LoginController: UIViewController{
     
+    var homeController: HomeController?
     
     let logoImageView: UIImageView = {
         let iv = UIImageView()

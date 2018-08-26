@@ -42,6 +42,7 @@ class UserInfoView: UIView {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let isEnabled = pickupSwitch.isOn
         Database.database().reference().child("users").child(uid).child("isPickupEnabled").setValue(isEnabled)
+        Database.database().reference().child("drivers").child(uid).child("isPickupEnabled").setValue(isEnabled)
     }
     
     override init(frame: CGRect) {
@@ -58,7 +59,7 @@ class UserInfoView: UIView {
         addSubview(nameLabel)
         nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         nameLabel.topAnchor.constraint(equalTo: userImageView.bottomAnchor, constant: 8).isActive = true
-        nameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        nameLabel.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         addSubview(pickupSwitch)
@@ -77,13 +78,15 @@ class UserInfoView: UIView {
             return
         }
         
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        Database.database().reference().child("drivers").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             guard let userData = snapshot.value as? [String : Any] else { return }
             let name = userData["name"] as? String
             self.nameLabel.text = name
             if let isPickupEnable = userData["isPickupEnabled"] as? Bool {
                 self.pickupSwitch.isHidden = false
                 self.pickupSwitch.isOn = isPickupEnable
+            }else{
+                self.pickupSwitch.isHidden = true
             }
             
         }) { (error) in

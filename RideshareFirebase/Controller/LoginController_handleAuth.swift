@@ -26,6 +26,7 @@ extension LoginController {
             NotificationCenter.default.post(name: name, object: nil)
             print(result?.user.uid)
             self.dismiss(animated: true, completion: nil)
+            self.homeController?.updateUserLocationInDatabase()
         }
     }
     
@@ -41,11 +42,16 @@ extension LoginController {
             let isDriver = userType == "Driver" ? true : false
             let userData = isDriver ? ["name": name, "type": userType, "isOnTrip": false, "isPickupEnabled": false] as [String : Any] : ["name": name, "type": userType] as [String: Any]
             FirebaseManager.createUserInDatabase(uid: result!.user.uid, userData: userData)
+            if isDriver {
+                FirebaseManager.createDriverInDatabase(uid: result!.user.uid, userData: userData)
+            }
             
             let name = Notification.Name(ObservationKey.login.rawValue)
             NotificationCenter.default.post(name: name, object: nil)
 
             self.dismiss(animated: true, completion: nil)
+            self.homeController?.updateUserLocationInDatabase()
+
         }
     }
 }

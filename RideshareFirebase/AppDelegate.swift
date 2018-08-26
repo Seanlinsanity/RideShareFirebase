@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.makeKeyAndVisible()
         
-        window?.rootViewController = HomeViewController()
+        window?.rootViewController = HomeController()
         
         let revealingSplashView = RevealingSplashView(iconImage: #imageLiteral(resourceName: "uberlogo"), iconInitialSize: CGSize(width: 160, height: 160), backgroundColor: .white)
         window?.addSubview(revealingSplashView)

@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import Firebase
 
-class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
+class HomeController: UIViewController, MenuDelegate {
     
     let locationManager = CLLocationManager()
     var regionRadius: CLLocationDistance = 1000
@@ -57,18 +57,55 @@ class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
         return btn
     }()
     
+    let centerButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.alpha = 0
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(#imageLiteral(resourceName: "centerMapBtn").withRenderingMode(.alwaysOriginal), for: .normal)
+        btn.addTarget(self, action: #selector(handleCenterButton), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var menuLauncher: MenuLauncher = {
         let menuLauncher = MenuLauncher()
         menuLauncher.delegate = self
         return menuLauncher
     }()
     
-    private func checkLocationAuthStatus(){
-        if CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
-            locationManager.startUpdatingLocation()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        
+        mapView.delegate = self
+        
+        checkLocationAuthStatus()
+    }
+    
+    func checkLocationAuthStatus(){
+        if CLLocationManager.locationServicesEnabled() && (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
+            setupLocationManager()
         }else{
             locationManager.requestAlwaysAuthorization()
         }
+    }
+    
+    private func setupLocationManager(){
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+        
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .follow
+        
+        centerMapOnUserLocation()
+        fetchDriverAnnotations()
+    }
+    
+    @objc private func handleCenterButton(){
+        centerMapOnUserLocation()
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.centerButton.alpha = 0
+        }, completion: nil)
     }
     
     func centerMapOnUserLocation() {
@@ -76,20 +113,39 @@ class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
         mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .white
-        setupUI()
-        
-        mapView.delegate = self
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        checkLocationAuthStatus()
+    private func fetchDriverAnnotations(){
+        Database.database().reference().child("drivers").observe(.value, with: { (snapshot) in
+            guard let driversSnapshot = snapshot.children.allObjects as? [DataSnapshot] else { return }
+            print(driversSnapshot)
+            for driver in driversSnapshot {
+                guard let driverDictionary = driver.value as? [String: Any] else { return }
+                guard let isPickupEnabled = driverDictionary["isPickupEnabled"] as? Bool else { return }
+                
+                if !isPickupEnabled {
+                    guard let driverAnnotation = self.mapView.annotations.first(where: {$0.title == driver.key}) else { continue }
+                    self.mapView.removeAnnotation(driverAnnotation)
+                    continue
+                }
+                
+                guard let coordinateArray = driverDictionary["coordinate"] as? NSArray else { return }
+                let driverCoordinate = CLLocationCoordinate2D(latitude: coordinateArray[0] as! CLLocationDegrees, longitude: coordinateArray[1] as! CLLocationDegrees)
+                
+                if let driverAnnotation = self.mapView.annotations.first(where: {$0.title == driver.key}) as? DriverAnnotation {
+                    driverAnnotation.update(coordinate: driverCoordinate)
+                }else{
+                    let driverAnnotation = DriverAnnotation(coordinate: driverCoordinate, title: driver.key)
+                    self.mapView.addAnnotation(driverAnnotation)
+                }
+                
+            }
+        }) { (error) in
+            print("fetch Driver Error: ", error)
+        }
     }
     
     fileprivate func setupUI() {
+        view.backgroundColor = .white
+        
         view.addSubview(mapView)
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -113,6 +169,12 @@ class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
         requestRideButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32).isActive = true
         requestRideButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32).isActive = true
         requestRideButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        view.addSubview(centerButton)
+        centerButton.bottomAnchor.constraint(equalTo: requestRideButton.topAnchor, constant: -16).isActive = true
+        centerButton.widthAnchor.constraint(equalToConstant: 64).isActive = true
+        centerButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        centerButton.heightAnchor.constraint(equalToConstant: 64).isActive = true
     }
     
     @objc private func handleShowMenu(){
@@ -120,12 +182,13 @@ class HomeViewController: UIViewController, MKMapViewDelegate, MenuDelegate {
     }
     
     @objc private func handleRequestRide(){
-        centerMapOnUserLocation()
+
     }
     
     func presentLoginController() {
         menuLauncher.handleDismiss()
         let loginController = LoginController()
+        loginController.homeController = self
         present(loginController, animated: true, completion: nil)
     }
 
