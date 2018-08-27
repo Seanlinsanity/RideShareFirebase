@@ -15,6 +15,11 @@ class HomeController: UIViewController, MenuDelegate {
     
     let locationManager = CLLocationManager()
     var regionRadius: CLLocationDistance = 1000
+    var tableViewHeightAnchor: NSLayoutConstraint!
+    
+    var searchMapResults = [MKMapItem]()
+
+    let editingBackgroundView = UIView()
     
     let mapView: MKMapView = {
         let mapView = MKMapView()
@@ -22,19 +27,41 @@ class HomeController: UIViewController, MenuDelegate {
         return mapView
     }()
     
-    let searchView: UITextView = {
-        let textView = UITextView()
-        textView.text = "  要去哪裡？"
-        textView.font = UIFont.systemFont(ofSize: 18)
-        textView.textColor = .gray
-        textView.backgroundColor = .white
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.layer.cornerRadius = 8
-        textView.layer.shadowColor = UIColor(white: 0.4, alpha: 0.4).cgColor
-        textView.layer.shadowRadius = 8
-        textView.layer.shadowOpacity = 0.5
-        textView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        return textView
+    let searchTextBackground: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 8
+        view.layer.shadowColor = UIColor(white: 0.4, alpha: 0.4).cgColor
+        view.layer.shadowRadius = 8
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 0, height: 4)
+        return view
+    }()
+    
+    let searchTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "要去哪裡？"
+        tf.font = UIFont.systemFont(ofSize: 18)
+        tf.backgroundColor = .white
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.returnKeyType = .search
+        tf.clearButtonMode = .whileEditing
+        return tf
+    }()
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.layer.masksToBounds = true
+        tableView.layer.cornerRadius = 8
+        tableView.layer.shadowColor = UIColor(white: 0.4, alpha: 0.4).cgColor
+        tableView.layer.shadowRadius = 8
+        tableView.layer.shadowOpacity = 0.5
+        tableView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        return tableView
     }()
     
     let menuButton: UIButton = {
@@ -72,14 +99,25 @@ class HomeController: UIViewController, MenuDelegate {
         return menuLauncher
     }()
     
+    let cellId = "cellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         
+//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissKeyboard)))
+        searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        
         mapView.delegate = self
         
         checkLocationAuthStatus()
+        
+        tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: cellId)
     }
+    
+//    @objc private func handleDismissKeyboard(){
+//        searchTextField.endEditing(true)
+//    }
     
     func checkLocationAuthStatus(){
         if CLLocationManager.locationServicesEnabled() && (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
@@ -127,19 +165,23 @@ class HomeController: UIViewController, MenuDelegate {
                     continue
                 }
                 
-                guard let coordinateArray = driverDictionary["coordinate"] as? NSArray else { return }
-                let driverCoordinate = CLLocationCoordinate2D(latitude: coordinateArray[0] as! CLLocationDegrees, longitude: coordinateArray[1] as! CLLocationDegrees)
-                
-                if let driverAnnotation = self.mapView.annotations.first(where: {$0.title == driver.key}) as? DriverAnnotation {
-                    driverAnnotation.update(coordinate: driverCoordinate)
-                }else{
-                    let driverAnnotation = DriverAnnotation(coordinate: driverCoordinate, title: driver.key)
-                    self.mapView.addAnnotation(driverAnnotation)
-                }
+                self.updateDriverAnnotation(driverDictionary: driverDictionary, driver: driver)
                 
             }
         }) { (error) in
             print("fetch Driver Error: ", error)
+        }
+    }
+    
+    private func updateDriverAnnotation(driverDictionary: [String: Any], driver: DataSnapshot){
+        guard let coordinateArray = driverDictionary["coordinate"] as? NSArray else { return }
+        let driverCoordinate = CLLocationCoordinate2D(latitude: coordinateArray[0] as! CLLocationDegrees, longitude: coordinateArray[1] as! CLLocationDegrees)
+        
+        if let driverAnnotation = self.mapView.annotations.first(where: {$0.title == driver.key}) as? DriverAnnotation {
+            driverAnnotation.update(coordinate: driverCoordinate)
+        }else{
+            let driverAnnotation = DriverAnnotation(coordinate: driverCoordinate, title: driver.key)
+            self.mapView.addAnnotation(driverAnnotation)
         }
     }
     
@@ -151,18 +193,32 @@ class HomeController: UIViewController, MenuDelegate {
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
+
         view.addSubview(menuButton)
         menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         menuButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32).isActive = true
         menuButton.widthAnchor.constraint(equalToConstant: 16).isActive = true
         menuButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
         
-        view.addSubview(searchView)
-        searchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        searchView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32).isActive = true
-        searchView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32).isActive = true
-        searchView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        view.addSubview(searchTextBackground)
+        searchTextBackground.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        searchTextBackground.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32).isActive = true
+        searchTextBackground.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32).isActive = true
+        searchTextBackground.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        searchTextField.delegate = self
+        searchTextBackground.addSubview(searchTextField)
+        searchTextField.topAnchor.constraint(equalTo: searchTextBackground.topAnchor).isActive = true
+        searchTextField.leftAnchor.constraint(equalTo: searchTextBackground.leftAnchor, constant: 8).isActive = true
+        searchTextField.rightAnchor.constraint(equalTo: searchTextBackground.rightAnchor, constant: -8).isActive = true
+        searchTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: searchTextBackground.bottomAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: searchTextBackground.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: searchTextBackground.rightAnchor).isActive = true
+        tableViewHeightAnchor = tableView.bottomAnchor.constraint(equalTo: searchTextBackground.bottomAnchor, constant: 0)
+        tableViewHeightAnchor.isActive = true
         
         view.addSubview(requestRideButton)
         requestRideButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true

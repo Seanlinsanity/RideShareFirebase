@@ -15,7 +15,10 @@
 		148697172109967C0093FACA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 148697152109967C0093FACA /* Main.storyboard */; };
 		14869719210996800093FACA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14869718210996800093FACA /* Assets.xcassets */; };
 		1486971C210996800093FACA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1486971A210996800093FACA /* LaunchScreen.storyboard */; };
+		14BA9D1B21339EA900D5B7FE /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BA9D1A21339EA900D5B7FE /* SearchResultCell.swift */; };
+		14BA9D1D21339EE200D5B7FE /* HomeController_TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BA9D1C21339EE200D5B7FE /* HomeController_TableView.swift */; };
 		14CE28BE210C479D00EB3ED5 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE28BD210C479D00EB3ED5 /* LoginController.swift */; };
+		14EBB6A42132A32000F66F74 /* HomeController_SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EBB6A32132A32000F66F74 /* HomeController_SearchTextField.swift */; };
 		14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8BB210AC77C00C123EC /* MenuLauncher.swift */; };
 		14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C1210AE90B00C123EC /* UserInfoView.swift */; };
 		14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C3210B305500C123EC /* MenuBarView.swift */; };
@@ -37,7 +40,10 @@
 		14869718210996800093FACA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1486971B210996800093FACA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1486971D210996800093FACA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14BA9D1A21339EA900D5B7FE /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		14BA9D1C21339EE200D5B7FE /* HomeController_TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController_TableView.swift; sourceTree = "<group>"; };
 		14CE28BD210C479D00EB3ED5 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		14EBB6A32132A32000F66F74 /* HomeController_SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController_SearchTextField.swift; sourceTree = "<group>"; };
 		14EED8BB210AC77C00C123EC /* MenuLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuLauncher.swift; sourceTree = "<group>"; };
 		14EED8C1210AE90B00C123EC /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		14EED8C3210B305500C123EC /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
@@ -113,6 +119,8 @@
 			children = (
 				148697132109967C0093FACA /* HomeController.swift */,
 				14F2F1D321105759000E3C40 /* HomeController_CLLocation.swift */,
+				14EBB6A32132A32000F66F74 /* HomeController_SearchTextField.swift */,
+				14BA9D1C21339EE200D5B7FE /* HomeController_TableView.swift */,
 				14CE28BD210C479D00EB3ED5 /* LoginController.swift */,
 				14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */,
 			);
@@ -123,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				14F2F1D2211047D8000E3C40 /* MenuBar */,
+				14BA9D1A21339EA900D5B7FE /* SearchResultCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -298,10 +307,13 @@
 				148697142109967C0093FACA /* HomeController.swift in Sources */,
 				14CE28BE210C479D00EB3ED5 /* LoginController.swift in Sources */,
 				14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */,
+				14BA9D1B21339EA900D5B7FE /* SearchResultCell.swift in Sources */,
 				1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */,
 				14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */,
 				14EF35EC210EE0350032DC0A /* User.swift in Sources */,
+				14BA9D1D21339EE200D5B7FE /* HomeController_TableView.swift in Sources */,
 				1466DB482111A4CE00EDB812 /* DatabseService.swift in Sources */,
+				14EBB6A42132A32000F66F74 /* HomeController_SearchTextField.swift in Sources */,
 				148697122109967C0093FACA /* AppDelegate.swift in Sources */,
 				14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */,
 				14F2F1D421105759000E3C40 /* HomeController_CLLocation.swift in Sources */,

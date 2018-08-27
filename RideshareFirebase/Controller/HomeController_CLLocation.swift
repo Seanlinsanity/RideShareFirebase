@@ -47,7 +47,36 @@ extension HomeController: MKMapViewDelegate {
         }, completion: nil)
     }
     
+    func searchLocation(){
+        searchMapResults.removeAll()
+        
+        let request = MKLocalSearchRequest()
+        guard let searchText = searchTextField.text else { return }
+        request.naturalLanguageQuery = searchText
+        request.region = mapView.region
+        
+        MKLocalSearch(request: request).start { (response, error) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            guard let response = response else { return }
+            self.searchMapResults = response.mapItems
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        }
+    }
+    
 }
+
+
+
+
+
+
 
 
 
