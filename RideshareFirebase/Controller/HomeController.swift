@@ -99,13 +99,22 @@ class HomeController: UIViewController, MenuDelegate {
         return menuLauncher
     }()
     
+    let activityIndicatorView: UIActivityIndicatorView = {
+        let activityIndicatorView = UIActivityIndicatorView()
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.activityIndicatorViewStyle = .whiteLarge
+        activityIndicatorView.backgroundColor = .gray
+        activityIndicatorView.layer.cornerRadius = 10
+        activityIndicatorView.clipsToBounds = true
+        return activityIndicatorView
+    }()
+    
     let cellId = "cellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         
-//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissKeyboard)))
         searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         mapView.delegate = self
@@ -114,10 +123,6 @@ class HomeController: UIViewController, MenuDelegate {
         
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: cellId)
     }
-    
-//    @objc private func handleDismissKeyboard(){
-//        searchTextField.endEditing(true)
-//    }
     
     func checkLocationAuthStatus(){
         if CLLocationManager.locationServicesEnabled() && (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
@@ -147,14 +152,18 @@ class HomeController: UIViewController, MenuDelegate {
     }
     
     func centerMapOnUserLocation() {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, regionRadius, regionRadius)
-        mapView.setRegion(coordinateRegion, animated: true)
+        
+        if mapView.overlays.count > 0 {
+            zoomToFitAnnotation()
+        }else{
+            let coordinateRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, regionRadius, regionRadius)
+            mapView.setRegion(coordinateRegion, animated: true)
+        }
     }
     
     private func fetchDriverAnnotations(){
         Database.database().reference().child("drivers").observe(.value, with: { (snapshot) in
             guard let driversSnapshot = snapshot.children.allObjects as? [DataSnapshot] else { return }
-            print(driversSnapshot)
             for driver in driversSnapshot {
                 guard let driverDictionary = driver.value as? [String: Any] else { return }
                 guard let isPickupEnabled = driverDictionary["isPickupEnabled"] as? Bool else { return }
@@ -246,6 +255,20 @@ class HomeController: UIViewController, MenuDelegate {
         let loginController = LoginController()
         loginController.homeController = self
         present(loginController, animated: true, completion: nil)
+    }
+    
+    func presentLoadingView(){
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.startAnimating()
+        activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicatorView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        activityIndicatorView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+    
+    func dismissLoadingView(){
+        activityIndicatorView.stopAnimating()
+        activityIndicatorView.removeFromSuperview()
     }
 
 }

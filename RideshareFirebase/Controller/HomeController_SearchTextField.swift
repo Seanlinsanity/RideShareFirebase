@@ -33,6 +33,7 @@ extension HomeController: UITextFieldDelegate{
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("should return")
+        presentLoadingView()
         searchLocation()
         view.endEditing(true)
         
@@ -53,6 +54,9 @@ extension HomeController: UITextFieldDelegate{
         
         searchMapResults.removeAll()
         tableView.reloadData()
+        
+        removeDestinationAndRoute()
+        
         return true
     }
     
