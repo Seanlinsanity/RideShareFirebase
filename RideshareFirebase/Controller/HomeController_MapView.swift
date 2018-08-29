@@ -14,7 +14,7 @@ import Firebase
 extension HomeController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        checkLocationAuthStatus()
+        checkLocationAuthorization()
     }
     
 }
@@ -27,7 +27,7 @@ extension HomeController: MKMapViewDelegate {
     }
     
     func updateUserLocationInDatabase(){
-        DatabaseService.shareInstance.updateUserLocation(coordinate: mapView.userLocation.coordinate)
+        UpdateCoordinateService.shareInstance.updateUserLocation(coordinate: mapView.userLocation.coordinate)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -58,8 +58,8 @@ extension HomeController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let lineRender = MKPolylineRenderer(overlay: overlay)
-        lineRender.strokeColor = UIColor.red
-        lineRender.lineWidth = 3.5
+        lineRender.strokeColor = UIColor.black
+        lineRender.lineWidth = 4
         dismissLoadingView()
         return lineRender
     }

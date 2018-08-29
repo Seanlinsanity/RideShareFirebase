@@ -41,9 +41,9 @@ extension LoginController {
             
             let isDriver = userType == "Driver" ? true : false
             let userData = isDriver ? ["name": name, "type": userType, "isOnTrip": false, "isPickupEnabled": false] as [String : Any] : ["name": name, "type": userType] as [String: Any]
-            FirebaseManager.createUserInDatabase(uid: result!.user.uid, userData: userData)
+            FirebaseSignInManager.createUserInDatabase(uid: result!.user.uid, userData: userData)
             if isDriver {
-                FirebaseManager.createDriverInDatabase(uid: result!.user.uid, userData: userData)
+                FirebaseSignInManager.createDriverInDatabase(uid: result!.user.uid, userData: userData)
             }
             
             let name = Notification.Name(ObservationKey.login.rawValue)

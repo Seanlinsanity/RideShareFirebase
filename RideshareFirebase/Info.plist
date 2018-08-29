@@ -43,5 +43,7 @@
 	<string>Provide your location information to start the service</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Provide your location information to start the service</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

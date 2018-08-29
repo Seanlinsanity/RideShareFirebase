@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class FirebaseManager {
+class FirebaseSignInManager {
     
     class func createUserInDatabase(uid: String, userData: [String: Any]) {
         Database.database().reference().child("users").child(uid).updateChildValues(userData)

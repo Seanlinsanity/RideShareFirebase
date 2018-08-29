@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		02788E433AC62C7BC853FC5B /* Pods_RideshareFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76875E501B06B50CF85A839D /* Pods_RideshareFirebase.framework */; };
-		1466DB482111A4CE00EDB812 /* DatabseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB472111A4CE00EDB812 /* DatabseService.swift */; };
+		1409B7922136353500B8D35E /* PickupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B7912136353500B8D35E /* PickupController.swift */; };
+		1466DB482111A4CE00EDB812 /* UpdateCoordinateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB472111A4CE00EDB812 /* UpdateCoordinateService.swift */; };
 		1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */; };
 		148697122109967C0093FACA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148697112109967C0093FACA /* AppDelegate.swift */; };
 		148697142109967C0093FACA /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148697132109967C0093FACA /* HomeController.swift */; };
@@ -24,7 +25,7 @@
 		14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C1210AE90B00C123EC /* UserInfoView.swift */; };
 		14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EED8C3210B305500C123EC /* MenuBarView.swift */; };
 		14EF35E6210ED4F20032DC0A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 14EF35E5210ED4F20032DC0A /* GoogleService-Info.plist */; };
-		14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */; };
+		14EF35E9210ED62C0032DC0A /* FirebaseSignInManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35E8210ED62C0032DC0A /* FirebaseSignInManager.swift */; };
 		14EF35EC210EE0350032DC0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35EB210EE0350032DC0A /* User.swift */; };
 		14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */; };
 		14F2F1D021103180000E3C40 /* MenuButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */; };
@@ -32,7 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1466DB472111A4CE00EDB812 /* DatabseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabseService.swift; sourceTree = "<group>"; };
+		1409B7912136353500B8D35E /* PickupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupController.swift; sourceTree = "<group>"; };
+		1466DB472111A4CE00EDB812 /* UpdateCoordinateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCoordinateService.swift; sourceTree = "<group>"; };
 		1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
 		1486970E2109967B0093FACA /* RideshareFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RideshareFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		148697112109967C0093FACA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -50,7 +52,7 @@
 		14EED8C1210AE90B00C123EC /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		14EED8C3210B305500C123EC /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		14EF35E5210ED4F20032DC0A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDatabase.swift; sourceTree = "<group>"; };
+		14EF35E8210ED62C0032DC0A /* FirebaseSignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSignInManager.swift; sourceTree = "<group>"; };
 		14EF35EB210EE0350032DC0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController_handleAuth.swift; sourceTree = "<group>"; };
 		14F2F1CF21103180000E3C40 /* MenuButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtonStackView.swift; sourceTree = "<group>"; };
@@ -75,7 +77,8 @@
 		1466DB462111A4AE00EDB812 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				1466DB472111A4CE00EDB812 /* DatabseService.swift */,
+				1466DB472111A4CE00EDB812 /* UpdateCoordinateService.swift */,
+				14EF35E8210ED62C0032DC0A /* FirebaseSignInManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -103,7 +106,6 @@
 			children = (
 				1466DB462111A4AE00EDB812 /* Service */,
 				14EF35EA210EE0240032DC0A /* Model */,
-				14EF35E7210ED60C0032DC0A /* FirebaseManager */,
 				14CE28BC210C41DC00EB3ED5 /* View */,
 				14CE28BB210C41D300EB3ED5 /* Controller */,
 				148697112109967C0093FACA /* AppDelegate.swift */,
@@ -125,6 +127,7 @@
 				14BA9D1C21339EE200D5B7FE /* HomeController_TableView.swift */,
 				14CE28BD210C479D00EB3ED5 /* LoginController.swift */,
 				14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */,
+				1409B7912136353500B8D35E /* PickupController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -136,14 +139,6 @@
 				14BA9D1A21339EA900D5B7FE /* SearchResultCell.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		14EF35E7210ED60C0032DC0A /* FirebaseManager */ = {
-			isa = PBXGroup;
-			children = (
-				14EF35E8210ED62C0032DC0A /* FirebaseDatabase.swift */,
-			);
-			path = FirebaseManager;
 			sourceTree = "<group>";
 		};
 		14EF35EA210EE0240032DC0A /* Model */ = {
@@ -316,13 +311,14 @@
 				14BA9D1F2133B3B800D5B7FE /* PassengerAnnotation.swift in Sources */,
 				14EF35EC210EE0350032DC0A /* User.swift in Sources */,
 				14BA9D1D21339EE200D5B7FE /* HomeController_TableView.swift in Sources */,
-				1466DB482111A4CE00EDB812 /* DatabseService.swift in Sources */,
+				1466DB482111A4CE00EDB812 /* UpdateCoordinateService.swift in Sources */,
 				14EBB6A42132A32000F66F74 /* HomeController_SearchTextField.swift in Sources */,
 				148697122109967C0093FACA /* AppDelegate.swift in Sources */,
-				14EF35E9210ED62C0032DC0A /* FirebaseDatabase.swift in Sources */,
+				14EF35E9210ED62C0032DC0A /* FirebaseSignInManager.swift in Sources */,
 				14F2F1D421105759000E3C40 /* HomeController_MapView.swift in Sources */,
 				14EED8C2210AE90B00C123EC /* UserInfoView.swift in Sources */,
 				14EF35EE210EE6640032DC0A /* LoginController_handleAuth.swift in Sources */,
+				1409B7922136353500B8D35E /* PickupController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

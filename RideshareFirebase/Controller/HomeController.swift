@@ -75,7 +75,7 @@ class HomeController: UIViewController, MenuDelegate {
     let requestRideButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("完成", for: .normal)
+        btn.setTitle("行程確認", for: .normal)
         btn.layer.cornerRadius = 8
         btn.backgroundColor = .black
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
@@ -117,16 +117,28 @@ class HomeController: UIViewController, MenuDelegate {
         
         searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
-        mapView.delegate = self
-        
-        checkLocationAuthStatus()
+        checkLocationService()
+        checkDriverAccount()
         
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
-    func checkLocationAuthStatus(){
-        if CLLocationManager.locationServicesEnabled() && (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
+    func checkLocationService(){
+        print("check")
+        if CLLocationManager.locationServicesEnabled(){
             setupLocationManager()
+            checkLocationAuthorization()
+        }
+    }
+    
+    func checkLocationAuthorization(){
+        if (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
+            mapView.delegate = self
+            mapView.showsUserLocation = true
+            mapView.userTrackingMode = .follow
+            
+            centerMapOnUserLocation()
+            fetchDriverAnnotations()
         }else{
             locationManager.requestAlwaysAuthorization()
         }
@@ -136,29 +148,39 @@ class HomeController: UIViewController, MenuDelegate {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-        
-        mapView.showsUserLocation = true
-        mapView.userTrackingMode = .follow
-        
-        centerMapOnUserLocation()
-        fetchDriverAnnotations()
     }
     
-    @objc private func handleCenterButton(){
-        centerMapOnUserLocation()
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.centerButton.alpha = 0
-        }, completion: nil)
+    private func checkDriverAccount(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Database.database().reference().child("drivers").child(uid).child("isPickupEnabled").observe(.value, with: { (snapshot) in
+            if snapshot.exists(){
+                guard let available = snapshot.value as? Bool else { return }
+                if available{
+                    self.observeTrips()
+                }else{
+                    return
+                }
+            }
+        }, withCancel: nil)
     }
     
-    func centerMapOnUserLocation() {
-        
-        if mapView.overlays.count > 0 {
-            zoomToFitAnnotation()
-        }else{
-            let coordinateRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, regionRadius, regionRadius)
-            mapView.setRegion(coordinateRegion, animated: true)
-        }
+    private func observeTrips(){
+        Database.database().reference().child("trips").observe(.childAdded, with: { (snapshot) in
+            print(snapshot.key)
+            guard let tripDict = snapshot.value as? [String: Any] else { return }
+            guard let pickupCoordinate = tripDict["pickupCoordinate"] as? NSArray, let destinationCoordinate = tripDict["destinationCoordinate"] as? NSArray, let isAccepted = tripDict["tripIsAccepted"] as? Bool, let name = tripDict["name"] as? String else { return }
+            if isAccepted { return }
+            
+            let pickupLocation = CLLocationCoordinate2D(latitude: pickupCoordinate[0] as! CLLocationDegrees, longitude: pickupCoordinate[1] as! CLLocationDegrees)
+            let destinationLocation = CLLocationCoordinate2D(latitude: destinationCoordinate[0] as! CLLocationDegrees, longitude: destinationCoordinate[1] as! CLLocationDegrees)
+            
+            let pickupController = PickupController(pickupCoordinate: pickupLocation, destinationCoordinate: destinationLocation, tripKey: snapshot.key)
+            pickupController.driverCoordinate = self.mapView.userLocation.coordinate
+            pickupController.passengerName = name
+            let navController = UINavigationController(rootViewController: pickupController)
+            self.present(navController, animated: true, completion: nil)
+            
+        }, withCancel: nil)
     }
     
     private func fetchDriverAnnotations(){
@@ -247,7 +269,7 @@ class HomeController: UIViewController, MenuDelegate {
     }
     
     @objc private func handleRequestRide(){
-
+        UpdateCoordinateService.shareInstance.updateTripRequest()
     }
     
     func presentLoginController() {
@@ -269,6 +291,22 @@ class HomeController: UIViewController, MenuDelegate {
     func dismissLoadingView(){
         activityIndicatorView.stopAnimating()
         activityIndicatorView.removeFromSuperview()
+    }
+    
+    @objc private func handleCenterButton(){
+        centerMapOnUserLocation()
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.centerButton.alpha = 0
+        }, completion: nil)
+    }
+    
+    func centerMapOnUserLocation() {
+        if mapView.overlays.count > 0 {
+            zoomToFitAnnotation()
+        }else{
+            let coordinateRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, regionRadius, regionRadius)
+            mapView.setRegion(coordinateRegion, animated: true)
+        }
     }
 
 }

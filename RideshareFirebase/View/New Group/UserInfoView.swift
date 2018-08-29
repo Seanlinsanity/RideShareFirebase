@@ -78,7 +78,7 @@ class UserInfoView: UIView {
             return
         }
         
-        Database.database().reference().child("drivers").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             guard let userData = snapshot.value as? [String : Any] else { return }
             let name = userData["name"] as? String
             self.nameLabel.text = name
