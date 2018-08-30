@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		02788E433AC62C7BC853FC5B /* Pods_RideshareFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76875E501B06B50CF85A839D /* Pods_RideshareFirebase.framework */; };
 		1409B7922136353500B8D35E /* PickupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B7912136353500B8D35E /* PickupController.swift */; };
+		1431AACD21379FB000E48F78 /* PickupController_MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431AACC21379FB000E48F78 /* PickupController_MapView.swift */; };
+		1431AACF2137F85700E48F78 /* HomeController_Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431AACE2137F85700E48F78 /* HomeController_Driver.swift */; };
 		1466DB482111A4CE00EDB812 /* UpdateCoordinateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB472111A4CE00EDB812 /* UpdateCoordinateService.swift */; };
 		1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */; };
 		148697122109967C0093FACA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148697112109967C0093FACA /* AppDelegate.swift */; };
@@ -34,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		1409B7912136353500B8D35E /* PickupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupController.swift; sourceTree = "<group>"; };
+		1431AACC21379FB000E48F78 /* PickupController_MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupController_MapView.swift; sourceTree = "<group>"; };
+		1431AACE2137F85700E48F78 /* HomeController_Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController_Driver.swift; sourceTree = "<group>"; };
 		1466DB472111A4CE00EDB812 /* UpdateCoordinateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCoordinateService.swift; sourceTree = "<group>"; };
 		1466DB492111AFFB00EDB812 /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
 		1486970E2109967B0093FACA /* RideshareFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RideshareFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,12 +126,14 @@
 			isa = PBXGroup;
 			children = (
 				148697132109967C0093FACA /* HomeController.swift */,
+				1431AACE2137F85700E48F78 /* HomeController_Driver.swift */,
 				14F2F1D321105759000E3C40 /* HomeController_MapView.swift */,
 				14EBB6A32132A32000F66F74 /* HomeController_SearchTextField.swift */,
 				14BA9D1C21339EE200D5B7FE /* HomeController_TableView.swift */,
 				14CE28BD210C479D00EB3ED5 /* LoginController.swift */,
 				14EF35ED210EE6640032DC0A /* LoginController_handleAuth.swift */,
 				1409B7912136353500B8D35E /* PickupController.swift */,
+				1431AACC21379FB000E48F78 /* PickupController_MapView.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -307,6 +313,8 @@
 				14EED8BC210AC77C00C123EC /* MenuLauncher.swift in Sources */,
 				14BA9D1B21339EA900D5B7FE /* SearchResultCell.swift in Sources */,
 				1466DB4A2111AFFB00EDB812 /* DriverAnnotation.swift in Sources */,
+				1431AACF2137F85700E48F78 /* HomeController_Driver.swift in Sources */,
+				1431AACD21379FB000E48F78 /* PickupController_MapView.swift in Sources */,
 				14EED8C4210B305500C123EC /* MenuBarView.swift in Sources */,
 				14BA9D1F2133B3B800D5B7FE /* PassengerAnnotation.swift in Sources */,
 				14EF35EC210EE0350032DC0A /* User.swift in Sources */,

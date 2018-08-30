@@ -31,12 +31,22 @@ class PickupController: UIViewController {
         return mapView
     }()
     
+    let addressLabel: UILabel = {
+        let lb = UILabel()
+        lb.translatesAutoresizingMaskIntoConstraints = false
+        lb.textColor = .white
+        lb.textAlignment = .center
+        lb.font = UIFont.boldSystemFont(ofSize: 24)
+        lb.numberOfLines = 0
+        return lb
+    }()
+    
     let pickupDistanceLabel: UILabel = {
         let lb = UILabel()
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.textColor = .white
         lb.textAlignment = .center
-        lb.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        lb.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         return lb
     }()
     
@@ -46,7 +56,7 @@ class PickupController: UIViewController {
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.textColor = .white
         lb.textAlignment = .center
-        lb.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        lb.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         return lb
     }()
     
@@ -59,7 +69,7 @@ class PickupController: UIViewController {
         return lb
     }()
     
-    init(pickupCoordinate: CLLocationCoordinate2D, destinationCoordinate: CLLocationCoordinate2D,tripKey: String) {
+    init(pickupCoordinate: CLLocationCoordinate2D, destinationCoordinate: CLLocationCoordinate2D, tripKey: String) {
         self.pickupCoordinate = pickupCoordinate
         self.destinationCoordinate = destinationCoordinate
         self.tripKey = tripKey
@@ -85,10 +95,27 @@ class PickupController: UIViewController {
         UIApplication.shared.statusBarStyle = .lightContent
         
         setupNavigationBar()
+        fetchPickupAddress()
         setupTripInfo()
     }
     
+    private func fetchPickupAddress(){
+        let location = CLLocation(latitude: pickupCoordinate!.latitude, longitude: pickupCoordinate!.longitude)
+        CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            
+            guard let placemark = placemarks?.first else { return }
+            let address = "\(placemark.subThoroughfare!) \(placemark.thoroughfare!), \(placemark.locality!) \(placemark.administrativeArea!), \(placemark.country!)"
+            self.addressLabel.text = address
+        }
+    }
+    
     private func setupTripInfo(){
+        
+        setupTripInfoUI()
         
         let destinationCL = CLLocation(latitude: destinationCoordinate!.latitude, longitude: destinationCoordinate!.longitude)
         let pickupCL = CLLocation(latitude: pickupCoordinate!.latitude, longitude: pickupCoordinate!.longitude)
@@ -96,19 +123,30 @@ class PickupController: UIViewController {
         let tripDistance = pickupCL.distance(from: destinationCL) / 1000
         let pickupDistance = pickupCL.distance(from: userCL) / 1000
 
-        pickupDistanceLabel.text = "乘客距離您      \(String(format: "%.2f", pickupDistance))公里 "
+        pickupDistanceLabel.text = "乘客距離您      \(String(format: "%.2f", pickupDistance)) km "
+        tripDistanceLabel.text = "此趟行程金額      $\(String(format: "%.2f", tripDistance))"
+        
+    }
+    
+    private func setupTripInfoUI(){
+        
+        view.addSubview(addressLabel)
+        addressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        addressLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 16).isActive = true
+        addressLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32).isActive = true
+        addressLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
         view.addSubview(pickupDistanceLabel)
         pickupDistanceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        pickupDistanceLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 32).isActive = true
+        pickupDistanceLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 16).isActive = true
         pickupDistanceLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32).isActive = true
-        pickupDistanceLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        pickupDistanceLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        tripDistanceLabel.text = "此趟行程      \(String(format: "%.2f", tripDistance))公里 "
         view.addSubview(tripDistanceLabel)
         tripDistanceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         tripDistanceLabel.topAnchor.constraint(equalTo: pickupDistanceLabel.bottomAnchor, constant: 8).isActive = true
         tripDistanceLabel.widthAnchor.constraint(equalTo: pickupDistanceLabel.widthAnchor).isActive = true
-        tripDistanceLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        tripDistanceLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         view.addSubview(passengerNameLabel)
         passengerNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -136,49 +174,20 @@ class PickupController: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "取消", style: .plain, target: self, action: #selector(handleCancel))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "接受", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "接受", style: .plain, target: self, action: #selector(handleAccept))
         navigationItem.leftBarButtonItem?.tintColor = .white
         navigationItem.rightBarButtonItem?.tintColor = .white
+    }
+    
+    @objc private func handleAccept(){
+        
     }
     
     @objc private func handleCancel(){
         dismiss(animated: true, completion: nil)
     }
     
-}
-
-extension PickupController: MKMapViewDelegate {
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = "pickupPoint"
-        var pickupAnnotation = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-        if pickupAnnotation != nil {
-            pickupAnnotation?.annotation = annotation
-        }else{
-            pickupAnnotation = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-        }
-        pickupAnnotation?.image = #imageLiteral(resourceName: "passenger")
-        return pickupAnnotation
-    }
-    
-    func centerMapOnLocation() {
-        let pickupPlacemark = MKPlacemark(coordinate: pickupCoordinate!)
-        let region = MKCoordinateRegionMakeWithDistance(pickupPlacemark.location!.coordinate, regionRadius, regionRadius)
-        mapView.setRegion(region, animated: true)
-    }
-    
-    func dropPickupAnnotaionInMap() {
-        
-        mapView.annotations.forEach { (annotation) in
-            mapView.removeAnnotation(annotation)
-        }
-        
-        let pickupAnnotation = MKPointAnnotation()
-        let pickupPlacemark = MKPlacemark(coordinate: pickupCoordinate!)
-        pickupAnnotation.coordinate = pickupPlacemark.coordinate
-        mapView.addAnnotation(pickupAnnotation)
-        
-    }
 }
 
 

@@ -75,7 +75,7 @@ class HomeController: UIViewController, MenuDelegate {
     let requestRideButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("行程確認", for: .normal)
+        btn.setTitle("確認行程", for: .normal)
         btn.layer.cornerRadius = 8
         btn.backgroundColor = .black
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
@@ -118,7 +118,6 @@ class HomeController: UIViewController, MenuDelegate {
         searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         checkLocationService()
-        checkDriverAccount()
         
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: cellId)
     }
@@ -136,9 +135,8 @@ class HomeController: UIViewController, MenuDelegate {
             mapView.delegate = self
             mapView.showsUserLocation = true
             mapView.userTrackingMode = .follow
-            
+            checkDriverAccount()
             centerMapOnUserLocation()
-            fetchDriverAnnotations()
         }else{
             locationManager.requestAlwaysAuthorization()
         }
@@ -152,35 +150,15 @@ class HomeController: UIViewController, MenuDelegate {
     
     private func checkDriverAccount(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Database.database().reference().child("drivers").child(uid).child("isPickupEnabled").observe(.value, with: { (snapshot) in
+        Database.database().reference().child("drivers").child(uid).child("isPickupEnabled").observe(.value) { (snapshot) in
             if snapshot.exists(){
                 guard let available = snapshot.value as? Bool else { return }
-                if available{
-                    self.observeTrips()
-                }else{
-                    return
-                }
+                if available { self.observeTrips() }
+                self.fetchDriverAnnotations()
+            }else{
+                self.fetchDriverAnnotations()
             }
-        }, withCancel: nil)
-    }
-    
-    private func observeTrips(){
-        Database.database().reference().child("trips").observe(.childAdded, with: { (snapshot) in
-            print(snapshot.key)
-            guard let tripDict = snapshot.value as? [String: Any] else { return }
-            guard let pickupCoordinate = tripDict["pickupCoordinate"] as? NSArray, let destinationCoordinate = tripDict["destinationCoordinate"] as? NSArray, let isAccepted = tripDict["tripIsAccepted"] as? Bool, let name = tripDict["name"] as? String else { return }
-            if isAccepted { return }
-            
-            let pickupLocation = CLLocationCoordinate2D(latitude: pickupCoordinate[0] as! CLLocationDegrees, longitude: pickupCoordinate[1] as! CLLocationDegrees)
-            let destinationLocation = CLLocationCoordinate2D(latitude: destinationCoordinate[0] as! CLLocationDegrees, longitude: destinationCoordinate[1] as! CLLocationDegrees)
-            
-            let pickupController = PickupController(pickupCoordinate: pickupLocation, destinationCoordinate: destinationLocation, tripKey: snapshot.key)
-            pickupController.driverCoordinate = self.mapView.userLocation.coordinate
-            pickupController.passengerName = name
-            let navController = UINavigationController(rootViewController: pickupController)
-            self.present(navController, animated: true, completion: nil)
-            
-        }, withCancel: nil)
+        }
     }
     
     private func fetchDriverAnnotations(){

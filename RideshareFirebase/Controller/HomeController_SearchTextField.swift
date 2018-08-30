@@ -55,8 +55,7 @@ extension HomeController: UITextFieldDelegate{
         searchMapResults.removeAll()
         tableView.reloadData()
         
-        removeDestinationAndRoute()
-        
+        removeDestinationAndRoute()        
         return true
     }
     

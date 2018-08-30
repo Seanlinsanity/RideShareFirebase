@@ -35,7 +35,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         dismissTableView()
         handleDismissKeyBoard()
         presentLoadingView()
-        addPassengerAnnotation()
+        //addPassengerAnnotation()
         addDestinationAnnotation(mapItem: mapItem)
         addDesitinationInFirebase(mapItem: mapItem)
         searchMapKitForRoute(mapItem: mapItem)
