@@ -38,7 +38,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         //addPassengerAnnotation()
         addDestinationAnnotation(mapItem: mapItem)
         addDesitinationInFirebase(mapItem: mapItem)
-        searchMapKitForRoute(mapItem: mapItem)
+        searchMapKitForRoute(mapItem: mapItem, removeRoutes: true)
     }
     
     func dismissTableView(){

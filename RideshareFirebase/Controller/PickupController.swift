@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Firebase
 
 class PickupController: UIViewController {
     
@@ -46,7 +47,7 @@ class PickupController: UIViewController {
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.textColor = .white
         lb.textAlignment = .center
-        lb.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        lb.font = UIFont.systemFont(ofSize: 18)
         return lb
     }()
     
@@ -56,7 +57,7 @@ class PickupController: UIViewController {
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.textColor = .white
         lb.textAlignment = .center
-        lb.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        lb.font = UIFont.systemFont(ofSize: 18)
         return lb
     }()
     
@@ -89,7 +90,7 @@ class PickupController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .darkGray
-
+        
         setupMapView()
         
         UIApplication.shared.statusBarStyle = .lightContent
@@ -123,8 +124,8 @@ class PickupController: UIViewController {
         let tripDistance = pickupCL.distance(from: destinationCL) / 1000
         let pickupDistance = pickupCL.distance(from: userCL) / 1000
 
-        pickupDistanceLabel.text = "乘客距離您      \(String(format: "%.2f", pickupDistance)) km "
-        tripDistanceLabel.text = "此趟行程金額      $\(String(format: "%.2f", tripDistance))"
+        pickupDistanceLabel.text = "Pickup Distance     \(String(format: "%.2f", pickupDistance)) km "
+        tripDistanceLabel.text = "Trip Fare      $\(String(format: "%.2f", tripDistance))"
         
     }
     
@@ -132,7 +133,7 @@ class PickupController: UIViewController {
         
         view.addSubview(addressLabel)
         addressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        addressLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 16).isActive = true
+        addressLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 32).isActive = true
         addressLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32).isActive = true
         addressLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
@@ -140,13 +141,13 @@ class PickupController: UIViewController {
         pickupDistanceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         pickupDistanceLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 16).isActive = true
         pickupDistanceLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32).isActive = true
-        pickupDistanceLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        pickupDistanceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         view.addSubview(tripDistanceLabel)
         tripDistanceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         tripDistanceLabel.topAnchor.constraint(equalTo: pickupDistanceLabel.bottomAnchor, constant: 8).isActive = true
         tripDistanceLabel.widthAnchor.constraint(equalTo: pickupDistanceLabel.widthAnchor).isActive = true
-        tripDistanceLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        tripDistanceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         view.addSubview(passengerNameLabel)
         passengerNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -160,7 +161,7 @@ class PickupController: UIViewController {
 
         view.addSubview(mapView)
         mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        mapView.topAnchor.constraint(equalTo: view.topAnchor, constant: 64).isActive = true
+        mapView.topAnchor.constraint(equalTo: view.topAnchor, constant: 56).isActive = true
         mapView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32).isActive = true
         mapView.heightAnchor.constraint(equalTo: mapView.widthAnchor).isActive = true
         
@@ -180,7 +181,13 @@ class PickupController: UIViewController {
     }
     
     @objc private func handleAccept(){
-        
+        guard let uid = Auth.auth().currentUser?.uid, let tripId = tripKey else { return }
+      
+        let ref = Database.database().reference().child("trips").child(tripId)
+        let value = ["tripIsAccepted": true, "driverId": uid] as [String : Any]
+        ref.updateChildValues(value)
+        dismiss(animated: true, completion: nil)
+
     }
     
     @objc private func handleCancel(){

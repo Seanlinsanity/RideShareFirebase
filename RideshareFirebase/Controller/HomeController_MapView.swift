@@ -51,17 +51,36 @@ extension HomeController: MKMapViewDelegate {
             }
             mkAnnotationView?.image = #imageLiteral(resourceName: "location")
             return mkAnnotationView!
+        }else if annotation is TripDriverAnnotation {
+            let identifier = "tripDriver"
+            var mkAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+            if mkAnnotationView == nil {
+                mkAnnotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            }else{
+                mkAnnotationView?.annotation = annotation
+            }
+            mkAnnotationView?.image = #imageLiteral(resourceName: "tripDriver")
+            return mkAnnotationView!
         }else{
             return nil
         }
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let lineRender = MKPolylineRenderer(overlay: overlay)
-        lineRender.strokeColor = UIColor.black
-        lineRender.lineWidth = 4
-        dismissLoadingView()
-        return lineRender
+        if mapView.overlays.count == 1 {
+            let lineRender = MKPolylineRenderer(overlay: overlay)
+            lineRender.strokeColor = UIColor.black
+            lineRender.lineWidth = 4
+            return lineRender
+        }else{
+            let lineRender = MKPolylineRenderer(overlay: overlay)
+            lineRender.strokeColor = UIColor.black
+            lineRender.lineWidth = 4
+            //        lineRender.lineDashPhase = 2
+            lineRender.lineDashPattern = [NSNumber(value: 1),NSNumber(value:5)]
+            return lineRender
+        }
+
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -97,9 +116,15 @@ extension HomeController: MKMapViewDelegate {
         }
     }
     
-    func searchMapKitForRoute(mapItem: MKMapItem){
+    func searchMapKitForRoute(mapItem: MKMapItem, removeRoutes: Bool){
         
-        mapView.removeOverlays(mapView.overlays)
+        if removeRoutes{
+            mapView.removeOverlays(mapView.overlays)
+        }
+        
+        while (mapView.overlays.count > 1) {
+            mapView.remove(mapView.overlays.last!)
+        }
 
         let request = MKDirectionsRequest()
         request.source = MKMapItem.forCurrentLocation()
@@ -116,6 +141,7 @@ extension HomeController: MKMapViewDelegate {
             let route = response.routes[0]
             self.mapView.add(route.polyline)
             self.zoomToFitAnnotation()
+            self.dismissLoadingView()
         }
         
     }

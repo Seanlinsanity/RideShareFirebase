@@ -31,7 +31,7 @@ class UpdateCoordinateService {
         }, withCancel: nil)
     }
     
-    func updateTripRequest() {
+    func updateTripRequest(completion: @escaping (String) -> ()) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value) { (snapshot) in
             guard let userDict = snapshot.value as? [String: Any] else { return }
@@ -45,9 +45,8 @@ class UpdateCoordinateService {
             let ref = Database.database().reference().child("trips").childByAutoId()
             let value = ["id": ref.key, "pickupCoordinate": pickupCoordinate, "destinationCoordinate": destinationCoordinate, "passengerId": uid, "name": name, "tripIsAccepted": false] as [String : Any]
             ref.updateChildValues(value)
-            
+            completion(ref.key)
         }
-        
         
     }
     

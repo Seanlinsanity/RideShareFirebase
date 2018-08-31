@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import CoreLocation
 
+
 extension HomeController {
     
     func observeTrips(){

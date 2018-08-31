@@ -109,6 +109,8 @@ class HomeController: UIViewController, MenuDelegate {
         return activityIndicatorView
     }()
     
+    lazy var requestStatusView = RequestStatusView()
+    
     let cellId = "cellId"
     
     override func viewDidLoad() {
@@ -130,6 +132,12 @@ class HomeController: UIViewController, MenuDelegate {
         }
     }
     
+    private func setupLocationManager(){
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+    
     func checkLocationAuthorization(){
         if (CLLocationManager.authorizationStatus() == .authorizedAlways ||  CLLocationManager.authorizationStatus() == .authorizedWhenInUse){
             mapView.delegate = self
@@ -140,12 +148,6 @@ class HomeController: UIViewController, MenuDelegate {
         }else{
             locationManager.requestAlwaysAuthorization()
         }
-    }
-    
-    private func setupLocationManager(){
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
     }
     
     private func checkDriverAccount(){
@@ -180,6 +182,10 @@ class HomeController: UIViewController, MenuDelegate {
         }) { (error) in
             print("fetch Driver Error: ", error)
         }
+    }
+    
+    func cancelFetchDriverAnnotations(){
+        Database.database().reference().child("drivers").removeAllObservers()
     }
     
     private func updateDriverAnnotation(driverDictionary: [String: Any], driver: DataSnapshot){
@@ -236,7 +242,7 @@ class HomeController: UIViewController, MenuDelegate {
         requestRideButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         view.addSubview(centerButton)
-        centerButton.bottomAnchor.constraint(equalTo: requestRideButton.topAnchor, constant: -16).isActive = true
+        centerButton.bottomAnchor.constraint(equalTo: requestRideButton.topAnchor, constant: -24).isActive = true
         centerButton.widthAnchor.constraint(equalToConstant: 64).isActive = true
         centerButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         centerButton.heightAnchor.constraint(equalToConstant: 64).isActive = true
@@ -247,7 +253,67 @@ class HomeController: UIViewController, MenuDelegate {
     }
     
     @objc private func handleRequestRide(){
-        UpdateCoordinateService.shareInstance.updateTripRequest()
+        UpdateCoordinateService.shareInstance.updateTripRequest { (tripId) in
+            
+            self.handleRequestStatusView()
+            
+            Database.database().reference().child("trips").child(tripId).observe(.value, with: { (snapshot) in
+                guard let tripDict = snapshot.value as? [String: Any] else { return }
+                guard let isAccepted = tripDict["tripIsAccepted"] as? Bool, let driverId = tripDict["driverId"] as? String else { return }
+                if isAccepted {
+                    DispatchQueue.main.async {
+                        self.handleRequestStatusViewAccepted()
+                        self.cancelFetchDriverAnnotations()
+                        self.addTripDriverCoordinate(driverId: driverId)
+                    }
+                }
+            })
+        }
+    }
+    
+    func addTripDriverCoordinate(driverId: String) {
+        Database.database().reference().child("drivers").child(driverId).observe(.value) { (snapshot) in
+            guard let driverDict = snapshot.value as? [String: Any] else { return }
+            guard let coordinate = driverDict["coordinate"] as? NSArray else { return }
+            let tripDriverCoordinate = CLLocationCoordinate2D(latitude: coordinate[0] as! CLLocationDegrees, longitude: coordinate[1] as! CLLocationDegrees)
+            
+            self.mapView.removeAnnotations(self.mapView.annotations.filter({$0 is DriverAnnotation}))
+            
+            if let tripDriverAnnotation = self.mapView.annotations.first(where: {$0 is TripDriverAnnotation}) as? TripDriverAnnotation{
+                tripDriverAnnotation.update(coordinate: tripDriverCoordinate)
+            }else{
+                let tripDriverAnnotation = TripDriverAnnotation(coordinate: tripDriverCoordinate, title: driverId)
+                self.mapView.addAnnotation(tripDriverAnnotation)
+            }
+            
+            let tripDriverPlacemark = MKPlacemark(coordinate: tripDriverCoordinate)
+            let tripDriverItem = MKMapItem(placemark: tripDriverPlacemark)
+            self.searchMapKitForRoute(mapItem: tripDriverItem, removeRoutes: false)
+            
+        }
+    }
+    
+    func handleRequestStatusView(){
+        self.requestRideButton.isHidden = true
+        
+        view.addSubview(requestStatusView)
+        requestStatusView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: 180)
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.requestStatusView.frame = CGRect(x: 0, y: self.view.frame.height - 180, width: self.view.frame.width, height: 180)
+        }, completion: nil)
+
+    }
+    
+    func handleRequestStatusViewAccepted(){
+        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut, animations: {
+            self.requestStatusView.frame = CGRect(x: 0, y: self.view.frame.height, width: self.view.frame.width, height: 180)
+        }) { (_) in
+            self.requestStatusView.handleRequestAccepted()
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.requestStatusView.frame = CGRect(x: 0, y: self.view.frame.height - 180, width: self.view.frame.width, height: 180)
+            }, completion: nil)
+        }
     }
     
     func presentLoginController() {

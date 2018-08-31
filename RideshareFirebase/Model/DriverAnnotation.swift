@@ -31,3 +31,25 @@ class DriverAnnotation: NSObject, MKAnnotation{
     
     
 }
+
+class TripDriverAnnotation: NSObject, MKAnnotation{
+    dynamic var coordinate: CLLocationCoordinate2D
+    var title: String?
+    
+    init(coordinate: CLLocationCoordinate2D, title: String) {
+        self.coordinate = coordinate
+        self.title = title
+        
+        super.init()
+    }
+    
+    func update(coordinate: CLLocationCoordinate2D) {
+        
+        UIView.animate(withDuration: 0.2) {
+            self.coordinate.latitude = coordinate.latitude
+            self.coordinate.longitude = coordinate.longitude
+        }
+    }
+    
+    
+}
